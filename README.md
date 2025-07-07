@@ -24,3 +24,4 @@ Note for developer:
 -del review data from db
 - in calculations.py in def cai() maybee should be activity.hand ( not "right"). In cti() the same...
 - BB11-16 (Q1 -Q3 how works?)
+- H17 H42 for indicator ( not activity)
