@@ -295,61 +295,61 @@ def multiplicity_young(hand: str):                                              
     return result
 
 
-# def s(activity: Activity, axis: str,):                                                                  #O20
-#     s = None
-#
-#     if activity.measurements is not None and activity.measurement_time is not None:
-#         ahw_axis = calculate_ahw(activity=activity, axis=axis)
-#         sum_of_square_stdev = 0
-#
-#         for measurement in activity.measurements.all():
-#             if axis.lower() == "x":
-#                 square_stdev = (measurement.ax - ahw_axis) ** 2
-#                 sum_of_square_stdev += square_stdev
-#             elif axis.lower() == "y":
-#                 square_stdev = (measurement.ay - ahw_axis) ** 2
-#                 sum_of_square_stdev += square_stdev
-#             elif axis.lower() == "z":
-#                 square_stdev = (measurement.az - ahw_axis) ** 2
-#                 sum_of_square_stdev += square_stdev
-#
-#         s = round((sum_of_square_stdev / (activity.measurements.count() - 1)) ** 0.5, 5)
-#
-#     return s
-#
-#
-# def uprobkj(activity: Activity, axis: str,):                                                                 #O21
-#     if activity.measurement_time is not None:
-#
-#         if activity.measurements.count() > 1:
-#             if axis.lower() == "x":
-#                 uprobkj = activity.s_axis_x / ((activity.measurements.count() ** 0.5) * activity.ahwx)
-#             elif axis.lower() == "y":
-#                 uprobkj = activity.s_axis_y / ((activity.measurements.count() ** 0.5) * activity.ahwy)
-#             elif axis.lower() == "z":
-#                 uprobkj = activity.s_axis_z / ((activity.measurements.count() ** 0.5) * activity.ahwz)
-#             return round(uprobkj, 5)
-#
-#         if activity.measurements.count() == 1:
-#             return 0
-#
-#     return None
-#
-#
-# def ucj(activity: Activity, axis: str,):                                                                         #O22
-#     ucj = None
-#
-#     if activity.measurement_time is not None:
-#         if axis.lower() == "x":
-#             ucj = (activity.uprobkj_x ** 2 + (COMBINED_STANDARD_UNCERTAINTY /100) ** 2) ** 0.5
-#         elif axis.lower() == "y":
-#             ucj = (activity.uprobkj_y ** 2 + (COMBINED_STANDARD_UNCERTAINTY /100) ** 2) ** 0.5
-#         elif axis.lower() == "z":
-#             ucj = (activity.uprobkj_z ** 2 + (COMBINED_STANDARD_UNCERTAINTY /100) ** 2) ** 0.5
-#
-#         return round(ucj, 5)
-#
-#     return ucj
+def s(activity: Activity, axis: str,):                                                                  #O20
+    s = None
+
+    if activity.measurements.count() > 1 and activity.measurement_time is not None:
+        ahw_axis = calculate_ahw(activity=activity, axis=axis)
+        sum_of_square_stdev = 0
+
+        for measurement in activity.measurements.all():
+            if axis.lower() == "x":
+                square_stdev = (measurement.ax - ahw_axis) ** 2
+                sum_of_square_stdev += square_stdev
+            elif axis.lower() == "y":
+                square_stdev = (measurement.ay - ahw_axis) ** 2
+                sum_of_square_stdev += square_stdev
+            elif axis.lower() == "z":
+                square_stdev = (measurement.az - ahw_axis) ** 2
+                sum_of_square_stdev += square_stdev
+
+        s = round((sum_of_square_stdev / (activity.measurements.count() - 1)) ** 0.5, 5)
+
+    return s
+
+
+def uprobkj(activity: Activity, axis: str,):                                                                 #O21
+    if activity.measurement_time is not None:
+
+        if activity.measurements.count() > 1:
+            if axis.lower() == "x":
+                uprobkj = activity.s_axis_x / ((activity.measurements.count() ** 0.5) * activity.ahwx)
+            elif axis.lower() == "y":
+                uprobkj = activity.s_axis_y / ((activity.measurements.count() ** 0.5) * activity.ahwy)
+            elif axis.lower() == "z":
+                uprobkj = activity.s_axis_z / ((activity.measurements.count() ** 0.5) * activity.ahwz)
+            return round(uprobkj, 5)
+
+        if activity.measurements.count() == 1:
+            return 0
+
+    return None
+
+
+def ucj(activity: Activity, axis: str,):                                                                         #O22
+    ucj = None
+
+    if activity.measurement_time is not None:
+        if axis.lower() == "x":
+            ucj = (activity.uprobkj_x ** 2 + (COMBINED_STANDARD_UNCERTAINTY /100) ** 2) ** 0.5
+        elif axis.lower() == "y":
+            ucj = (activity.uprobkj_y ** 2 + (COMBINED_STANDARD_UNCERTAINTY /100) ** 2) ** 0.5
+        elif axis.lower() == "z":
+            ucj = (activity.uprobkj_z ** 2 + (COMBINED_STANDARD_UNCERTAINTY /100) ** 2) ** 0.5
+
+        return round(ucj, 5)
+
+    return ucj
 
 
 # def uhvi(activity: Activity, axis: str,):                                                                                             #BG11 = #R22
