@@ -43,6 +43,7 @@ class Activity(models.Model):   # Czynność
     uca8 = models.FloatField(blank=True, null=True)
     _2xuca8 = models.FloatField(blank=True, null=True)
     daily_exposure = models.TextField(blank=True, null=True)
+    uahv = models.FloatField(blank=True, null=True)
 
 
     class Meta:
@@ -71,8 +72,8 @@ class Indicator(models.Model):
 
     daily_exposure_rh = models.TextField(blank=True, null=True)
     daily_exposure_lh = models.TextField(blank=True, null=True)
-    exposure_30_less_rh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0),])
-    exposure_30_less_lh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
+    exposure_30_less_rh = models.TextField(blank=True, null=True)
+    exposure_30_less_lh = models.TextField(blank=True, null=True)
     multiplicity_NDN_rh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0),])
     multiplicity_NDN_lh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
     action_threshold_multiplicity_rh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0),])
@@ -120,6 +121,8 @@ class Indicator(models.Model):
     bs15_r = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
     h22_l = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
     h22_r = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
+    ucahvmax_l = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
+    ucahvmax_r = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
 
     def __str__(self):
         return f"{self.id}"

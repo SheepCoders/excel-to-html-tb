@@ -438,7 +438,6 @@ def _2xuca8(activity:Activity):                                                 
     return None
 
 
-
 def daily_exposure(activity:Activity):                                                                   # H17 H42
     if activity.measurement_time is not None:
         result_str = ""
@@ -455,66 +454,42 @@ def daily_exposure(activity:Activity):                                          
     return None
 
 
-#
-# def ahvmax():                                         +++                                                      BG17
-#
-# =ЕСЛИ(BA11="";
-# "";
-# ЕСЛИ(BM9 < 1;
-# "Nie dotyczy";
-# МАКС(BM11: BM16)))
+def uahv(activity: Activity):                                                                   #BN11 - BN16
+    if activity.measurement_time is not None and activity.measurement_time <= 30:
+        return activity.uhvi
+    return None
 
 
+def ucahvmax(hand: str):                                                                  #BG18
+    if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
+        if num_impact_lt_30(hand) > 1:
+            uahv_sums = [
+                activity.uahv for activity in Activity.objects.filter(measurement_time__lt=30, hand=hand)
+                if activity.uahv is not None
+            ]
+            max_uahv= max(uahv_sums) if uahv_sums else None
+            return round(max_uahv, 5)
 
-#
-#
-#
-# def uahv():                                                                                          #BN11 - BN16
-#     =ЕСЛИ(BM12="";
-#     "";
-#     BG12)
-#
-#
-#
-#
-#
-# def ucahvmax():                                                                                        #BG18
-#     =ЕСЛИ(BG17="";
-#     "";
-#     ЕСЛИ(BM9 < 1;
-#     "Nie dotyczy";
-#     ЕСЛИ(BG17=BM11;
-#     BN11;
-#     ЕСЛИ(BG17=BM12;
-#     BN12;
-#     ЕСЛИ(BG17=BM13;
-#     BN13;
-#     ЕСЛИ(BG17=BM14;
-#     BN14;
-#     ЕСЛИ(BG17=BM15;
-#     BN15;
-#     ЕСЛИ(BG17=BM16;
-#     BN16;
-#     ""))))))))
-#
-#
-#
-#
-#
-# def xucahvmax2():                                                                                              #BG19
-# =ЕСЛИ(BA11="";"";ЕСЛИ(BM9<1;"Nie dotyczy";2*BG18))
-#
-#
-#
-#
-# # def H18():                                                                                              #H18
-# #     =ЕСЛИ(A11="";
-# #     "";
-# #     ЕСЛИ(BM9 < 1;
-# #     "Nie dotyczy";
-# #     СЦЕПИТЬ(ФИКСИРОВАННЫЙ(BG17;
-# #     L3);СИМВОЛ(177);
-#     ФИКСИРОВАННЫЙ(BG19;
-#     L3))))
-#
+        elif num_impact_lt_30(hand) == 1:
+            activity = Activity.objects.get(hand=hand, measurement_time__lt=30)
+            if activity.uahv is not None:
+                max_uahv = activity.uahv
+                return round(max_uahv, 5)
+            return None
 
+        elif num_impact_lt_30(hand) < 1:
+            return None  # "Nie dot"
+
+    return None
+
+
+ #BG19 = 2 * BG18
+
+
+def exposure_30_less(hand: str):                                                                                  #H18
+    if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
+        if Activity.objects.filter(measurement_time__lt=30, hand=hand).exists():
+            return f"{round(max_vector_summ_impact_lt_30(hand=hand), 2)} ± {round(ucahvmax(hand=hand) * 2, 2)}"
+
+        return "Nie dotyczy"
+    return None

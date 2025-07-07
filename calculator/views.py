@@ -15,7 +15,7 @@ from .calculations import (
     s,
     uprobkj,
     ucj,
-    uhvi, cai, caiuci2, uti_rh, uti_lh, cti, ctiuti2, uca8, _2xuca8, daily_exposure
+    uhvi, cai, caiuci2, uti_rh, uti_lh, cti, ctiuti2, uca8, _2xuca8, daily_exposure, uahv, ucahvmax, exposure_30_less
 )
 from .models import Activity, Measurement, Indicator
 
@@ -62,6 +62,7 @@ class CombinedActivityIndicatorView(generic.ListView):
                 activity.uca8 = uca8(activity)
                 activity._2xuca8 = _2xuca8(activity)
                 activity.daily_exposure = daily_exposure(activity)
+                activity.uahv = uahv(activity)
 
 
                 activity.save()
@@ -96,6 +97,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.bs17_r = exceedings_ndn_8h_young("right")
                 indicator.bs15_r = num_values_exceeded_young("right")
                 indicator.h22_r = multiplicity_young("right")
+                indicator.ucahvmax_r = ucahvmax("right")
+                indicator.exposure_30_less_rh = exposure_30_less("right")
 
             else:
                 indicator.exposure_time_rh = None
@@ -123,6 +126,9 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.bs17_r = None
                 indicator.bs15_r = None
                 indicator.h22_r = None
+                indicator.ucahvmax_r = None
+                indicator.exposure_30_less_rh = None
+
 
             if Activity.objects.filter(hand="left", measurements__isnull=False).exists():
                 indicator.exposure_time_lh = hand_exposure_time("left")
@@ -150,6 +156,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.bs17_l = exceedings_ndn_8h_young("left")
                 indicator.bs15_l = num_values_exceeded_young("left")
                 indicator.h22_l = multiplicity_young("left")
+                indicator.ucahvmax_l = ucahvmax("left")
+                indicator.exposure_30_less_lh = exposure_30_less("left")
 
             else:
                 indicator.exposure_time_lh = None
@@ -160,23 +168,25 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.daily_exposure_lh = None
 # for debug
                 indicator.bg20_l = None
-                indicator.ba17_r = None
-                indicator.bm9_r = None
-                indicator.bg17_r = None
-                indicator.bq18_r = None
-                indicator.bq17_r = None
-                indicator.bq15_r = None
-                indicator.h19_r = None
-                indicator.bq21_r = None
-                indicator.h20_r = None
-                indicator.br18_r = None
-                indicator.br17_r = None
-                indicator.br15_r = None
-                indicator.h21_r = None
-                indicator.bs18_r = None
-                indicator.bs17_r = None
-                indicator.bs15_r = None
-                indicator.h22_r = None
+                indicator.ba17_l = None
+                indicator.bm9_l = None
+                indicator.bg17_l = None
+                indicator.bq18_l = None
+                indicator.bq17_l = None
+                indicator.bq15_l = None
+                indicator.h19_l = None
+                indicator.bq21_l = None
+                indicator.h20_l = None
+                indicator.br18_l = None
+                indicator.br17_l = None
+                indicator.br15_l = None
+                indicator.h21_l = None
+                indicator.bs18_l = None
+                indicator.bs17_l = None
+                indicator.bs15_l = None
+                indicator.h22_l = None
+                indicator.ucahvmax_l = None
+                indicator.exposure_30_less_lh = None
 
 
             indicator.save()
