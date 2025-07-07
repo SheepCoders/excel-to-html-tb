@@ -123,8 +123,10 @@ def max_vector_summ_impact_lt_30(hand):                                         
 
         elif num_impact_lt_30(hand) == 1:
             activity = Activity.objects.get(hand=hand, measurement_time__lt=30)
-            max_vector_summ = activity.vector_summ if activity.vector_summ is not None else None
-            return round(max_vector_summ, 5)
+            if activity.vector_summ is not None:
+                max_vector_summ = activity.vector_summ
+                return round(max_vector_summ, 5)
+            return None
 
         elif num_impact_lt_30(hand) < 1:
             return None   #"Nie dot"
@@ -374,9 +376,6 @@ def cai(activity: Activity):                                                    
     return None
 
 
-
-
-
 def caiuci2(activity: Activity):                                                                        #BJ11-16
     if activity.measurement_time is not None:
         return (activity.uhvi * activity.cai) ** 2
@@ -385,93 +384,76 @@ def caiuci2(activity: Activity):                                                
 
 
 
-#
-# def uti_rh():                                     +++                                                          #BB11 - BB16
-#     =ЕСЛИ(BA11="";
-#     "";
-#     ЕСЛИ(СЧЁТ(Q1: Q3)=1;
-#     0;
-#     ЕСЛИ(СЧЁТ(Q1: Q3)=2;
-#     ОКРУГЛ((МАКС(Q1:Q3) - МИН(Q1: Q3)) / 2;
-#     2);ОКРУГЛ(СТОТКЛ(Q1: Q3) / КОРЕНЬ(3);
-#     2))))
+
+def uti_rh(activity:Activity):                                                                   #BB11 - BB16
+    if Activity.objects.filter(hand="right") is not None:
+        if activity.measurement_time is not None:
+            return 0
+            ## Q1 -Q3 how works?
+    return None
+
+
+def uti_lh(activity:Activity):                                                                   #BB11 - BB16
+    if Activity.objects.filter(hand = "left") is not None:
+        if activity.measurement_time is not None:
+            return 0
+            ## Q1 -Q3 how works?
+    return None
+
+
+def cti(activity:Activity):                                                                     #BK11 -BK16   BK36 - BK41
+    if activity.measurement_time is not None and value_a8("right") is not None:
+        if value_a8("right") > 0:
+            return activity.vector_summ ** 2 / (2 * 480 * value_a8("right"))                        #?? "right"?
+
+    return None
+
+
+def ctiuti2(activity:Activity):                                                                           #BL11 -BL16
+    if activity.measurement_time is not None:
+        if activity.hand.lower() == "right":
+            return (activity.uti_lh * activity.cti) ** 2
+
+    return None
+
+def uca8(activity:Activity):                                                                          #BG21
+    if activity.measurement_time is not None:
+        sum_of_caiuci2 = 0
+        sum_of_ctiuti2 = 0
+
+        for activity in Activity.objects.filter(hand=activity.hand):
+            if activity.caiuci2 is not None:
+                sum_of_caiuci2 += activity.caiuci2
+            if activity.ctiuti2 is not None:
+                sum_of_ctiuti2 += activity.ctiuti2
+
+        return (sum_of_caiuci2 + sum_of_ctiuti2) ** 0.5
+
+    return None
+
+
+def _2xuca8(activity:Activity):                                                                             #BG22
+    if activity.measurement_time is not None:
+        return 2 * activity.uca8
+    return None
 
 
 
+def daily_exposure(activity:Activity):                                                                   # H17 H42
+    if activity.measurement_time is not None:
+        result_str = ""
 
+        if hand_exposure_time(hand=activity.hand) is not None and hand_exposure_time(hand=activity.hand) > 30:
+            if value_a8(activity.hand) is not None and activity._2xuca8 is not None:
+                first_value = round(value_a8(hand=activity.hand), RES_ROUND_UP_TO)
+                second_value = round(activity._2xuca8, RES_ROUND_UP_TO)
+                result_str += f"{first_value} ± {second_value}"
+                return result_str
 
-# def uti_lh():                                       +++                                                         # BB11 - BB16
-#     =ЕСЛИ(BA11="";
-#     "";
-#     ЕСЛИ(СЧЁТ(Q1: Q3)=1;
-#     0;
-#     ЕСЛИ(СЧЁТ(Q1: Q3)=2;
-#     ОКРУГЛ((МАКС(Q1:Q3) - МИН(Q1: Q3)) / 2;
-#     2);ОКРУГЛ(СТОТКЛ(Q1: Q3) / КОРЕНЬ(3);
-#     2))))
+        return f"Nie dotyczy ('{result_str}')"
 
+    return None
 
-#
-# def cti__lh_rh():                                            +++                             #BK11 -BK16   BK36 - BK41
-#     =ЕСЛИ(BA11="";
-#     "";
-#     BF11 ^ 2 / (2 * 480 *$BG$20))
-
-
-
-
-# def ctiuti2():                                            +++                                                  #BL11 -BL16
-#     =ЕСЛИ(BA11="";
-#     "";
-#     (BB11 * BK11) ^ 2)
-# #
-
-# def caiuci2__lh_rh():                                      +++                                        #BJ11-BJ16 BJ36 - BJ41
-#     =ЕСЛИ(BA11="";
-#     "";
-#     (BG11 * BI11) ^ 2)
-
-
-
-
-# #
-# def uca8(hand: str):                                         +++                                           #BG21
-#
-#     =ЕСЛИ(Q1="";
-#     "";
-#     КОРЕНЬ(СУММ(BJ11: BJ16;
-#     BL11: BL16)))
-
-
-
-# def _2xuca8(hand: str):                                       +++                                            #BG22
-#     if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
-#         return 2 * BG21
-#     return None
-
-
-
-# def daily_exposure(hand: str):                          +++                                                  #H17
-#     result = None
-#
-#     if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
-#
-#         if hand_exposure_time(hand=hand) is not None and hand_exposure_time(hand=hand) > 30:
-#             first_value = round(value_a8(hand=hand), RES_ROUND_UP_TO)
-#             second_value = round(, RES_ROUND_UP_TO)
-#
-#             result = f"{first_value} symbol {second_value}"
-#
-#         is sum>30:
-#             res
-#         else:
-#             return "NOOO"
-#
-#     return None
-#
-#
-# =ЕСЛИ(A11="";"";ЕСЛИ(СУММ(D11:D16)>30;СЦЕПИТЬ(ФИКСИРОВАННЫЙ(BG20;L3);СИМВОЛ(177);ФИКСИРОВАННЫЙ(BG22;L3));
-# СЦЕПИТЬ("Nie dotyczy (";ФИКСИРОВАННЫЙ(BG20;L3);СИМВОЛ(177);ФИКСИРОВАННЫЙ(BG22;L3);")")))
 
 #
 # def ahvmax():                                         +++                                                      BG17

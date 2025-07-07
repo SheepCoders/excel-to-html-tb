@@ -35,6 +35,15 @@ class Activity(models.Model):   # Czynność
     uhvi = models.FloatField(blank=True, null=True)
     cai = models.FloatField(blank=True, null=True)
     caiuci2 = models.FloatField(blank=True, null=True)
+    uti_rh = models.FloatField(blank=True, null=True)
+    uti_lh = models.FloatField(blank=True, null=True)
+    cti = models.FloatField(blank=True, null=True)
+    ctiuti2 = models.FloatField(blank=True, null=True)
+    caiuci2 = models.FloatField(blank=True, null=True)
+    uca8 = models.FloatField(blank=True, null=True)
+    _2xuca8 = models.FloatField(blank=True, null=True)
+    daily_exposure = models.TextField(blank=True, null=True)
+
 
     class Meta:
         verbose_name_plural = "activities"
@@ -60,8 +69,8 @@ class Measurement(models.Model):
 
 class Indicator(models.Model):
 
-    daily_exposure_rh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0),])
-    daily_exposure_lh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
+    daily_exposure_rh = models.TextField(blank=True, null=True)
+    daily_exposure_lh = models.TextField(blank=True, null=True)
     exposure_30_less_rh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0),])
     exposure_30_less_lh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0), ])
     multiplicity_NDN_rh = models.FloatField(blank=True, null=True, validators=[MinValueValidator(0),])
