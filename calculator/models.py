@@ -32,6 +32,7 @@ class Activity(models.Model):   # Czynność
     ucj_x = models.FloatField(blank=True, null=True)
     ucj_y = models.FloatField(blank=True, null=True)
     ucj_z = models.FloatField(blank=True, null=True)
+    uhvi = models.FloatField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "activities"

@@ -352,20 +352,18 @@ def ucj(activity: Activity, axis: str,):                                        
     return ucj
 
 
-# def uhvi(activity: Activity, axis: str,):                                                                                             #BG11 = #R22
-#     if activity.measurements is not None:
-#         activity.ucj_x = round(((((activity.ucj_x * (activity.ahwx ** 2)) ** 2) + ((activity.ucj_y * (activity.ahwy ** 2)) ** 2) +
-#         ((activity.ucj_z * (activity.ahwz ** 2)) ** 2)) / (((activity.vector_summ) ** 2) ** 0,5); 5)
-#
-#         return activity.ucj_x
-#
-#     return None
-#
-#
-#     =ЕСЛИ(Q1="";
-#     "";
-#     ОКРУГЛ(КОРЕНЬ((((O22 * O18 ^ 2) ^ 2 + (P22 * P18 ^ 2) ^ 2 + (Q22 * Q18 ^ 2) ^ 2)) / R19 ^ 2);
-#     5))
+def uhvi(activity: Activity):                                                            #BG11 = #R22
+    if activity.measurements is not None:
+        if activity.vector_summ > 0:
+            activity.uhvi = round((((((activity.ucj_x * (activity.ahwx ** 2)) ** 2) +
+                             ((activity.ucj_y * (activity.ahwy ** 2)) ** 2) +
+                              ((activity.ucj_z * (activity.ahwz ** 2)) ** 2))) / activity.vector_summ ** 2)
+                                  ** 0.5, 5)
+
+            return activity.uhvi
+
+    return None
+
 
 
 # def cai():                                       +++                                                           #BI11
