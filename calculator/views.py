@@ -14,7 +14,8 @@ from .calculations import (
     num_values_exceeded_pregn_breast, exceedings_ndn_05h_young, exceedings_ndn_8h_young, num_values_exceeded_young,
     s,
     uprobkj,
-    ucj
+    ucj,
+    uhvi, cai, caiuci2, uti_rh, uti_lh, cti, ctiuti2, uca8, _2xuca8, daily_exposure
 )
 from .models import Activity, Measurement, Indicator
 
@@ -40,7 +41,7 @@ class CombinedActivityIndicatorView(generic.ListView):
                 activity.rounded_vector_summ = round(activity.vector_summ, activity.round_up_to)
                 activity.partial_exposure = calculate_partial_exposure(activity)
                 activity.vector_summ_time = vector_summ_time(activity)
-
+#for debug
                 activity.s_axis_x = s(activity, "x")
                 activity.s_axis_y = s(activity, "y")
                 activity.s_axis_z = s(activity, "z")
@@ -50,6 +51,17 @@ class CombinedActivityIndicatorView(generic.ListView):
                 activity.ucj_x = ucj(activity, "x")
                 activity.ucj_y = ucj(activity, "y")
                 activity.ucj_z = ucj(activity, "z")
+                activity.uhvi = uhvi(activity)
+                activity.cai =cai(activity)
+                activity.caiuci2 = caiuci2(activity)
+                activity.uti_rh = uti_rh(activity)
+                activity.uti_lh = uti_lh(activity)
+                activity.cti = cti(activity)
+                activity.ctiuti2 = ctiuti2(activity)
+                activity.caiuci2 = caiuci2(activity)
+                activity.uca8 = uca8(activity)
+                activity._2xuca8 = _2xuca8(activity)
+                activity.daily_exposure = daily_exposure(activity)
 
 
                 activity.save()
@@ -64,7 +76,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.action_threshold_multiplicity_rh = action_threshold_multiplicity("right")
                 indicator.multiplicity_pregnant_breastfeeding_rh = multiplicity_pregnant_breastfeeding("right")
                 indicator.multiplicity_young_rh = multiplicity_young("right")
-
+                indicator.daily_exposure_rh = daily_exposure(Activity.objects.filter(hand="right")[0])
+# for debug
                 indicator.bg20_r = value_a8("right")
                 indicator.ba17_r = hand_exposure_time("right")
                 indicator.bm9_r = num_impact_lt_30("right")
@@ -90,7 +103,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.action_threshold_multiplicity_rh = None
                 indicator.multiplicity_pregnant_breastfeeding_rh = None
                 indicator.multiplicity_young_rh = None
-
+                indicator.daily_exposure_rh = None
+# for debug
                 indicator.bg20_r = None
                 indicator.ba17_r = None
                 indicator.bm9_r = None
@@ -116,7 +130,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.action_threshold_multiplicity_lh = action_threshold_multiplicity("left")
                 indicator.multiplicity_pregnant_breastfeeding_lh = multiplicity_pregnant_breastfeeding("left")
                 indicator.multiplicity_young_lh = multiplicity_young("left")
-
+                indicator.daily_exposure_lh = daily_exposure(Activity.objects.filter(hand="left")[0])
+# for debug
                 indicator.bg20_l = value_a8("left")
                 indicator.ba17_l = hand_exposure_time("left")
                 indicator.bm9_l = num_impact_lt_30("left")
@@ -142,7 +157,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.action_threshold_multiplicity_lh = None
                 indicator.multiplicity_pregnant_breastfeeding_lh = None
                 indicator.multiplicity_young_lh = None
-
+                indicator.daily_exposure_lh = None
+# for debug
                 indicator.bg20_l = None
                 indicator.ba17_r = None
                 indicator.bm9_r = None
