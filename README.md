@@ -22,4 +22,4 @@ Note for developer:
 -check left hand down calcul-s
 -translate to polish
 -del review data from db
-
+- in calculations.py in def cai() maybee should be activity.hand ( not "right")

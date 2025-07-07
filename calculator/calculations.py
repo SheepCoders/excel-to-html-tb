@@ -352,7 +352,7 @@ def ucj(activity: Activity, axis: str,):                                        
     return ucj
 
 
-def uhvi(activity: Activity):                                                            #BG11 = #R22
+def uhvi(activity: Activity):                                                              #BG11 = #R22
     if activity.measurements is not None:
         if activity.vector_summ > 0:
             activity.uhvi = round((((((activity.ucj_x * (activity.ahwx ** 2)) ** 2) +
@@ -365,11 +365,14 @@ def uhvi(activity: Activity):                                                   
     return None
 
 
+def cai(activity: Activity):                                                                          #BI11
+    if activity.measurement_time is not None and value_a8("right") is not None:                             #??? right(should be activity.hand)
+        if value_a8("right") > 0:
+            cai = activity.measurement_time * activity.vector_summ / (480 * value_a8("right"))
+            return cai
 
-# def cai():                                       +++                                                           #BI11
-#     =ЕСЛИ(BA11="";
-#     "";
-#     BA11 * BF11 / (480 *$BG$20))
+    return None
+
 
 # #
 # #
