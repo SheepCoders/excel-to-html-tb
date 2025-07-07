@@ -15,7 +15,7 @@ from .calculations import (
     s,
     uprobkj,
     ucj,
-    uhvi, cai
+    uhvi, cai, caiuci2
 )
 from .models import Activity, Measurement, Indicator
 
@@ -53,6 +53,7 @@ class CombinedActivityIndicatorView(generic.ListView):
                 activity.ucj_z = ucj(activity, "z")
                 activity.uhvi = uhvi(activity)
                 activity.cai =cai(activity)
+                activity.caiuci2 = caiuci2(activity)
 
 
                 activity.save()

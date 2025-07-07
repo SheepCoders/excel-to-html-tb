@@ -366,7 +366,7 @@ def uhvi(activity: Activity):                                                   
 
 
 def cai(activity: Activity):                                                                          #BI11
-    if activity.measurement_time is not None and value_a8("right") is not None:                             #??? right(should be activity.hand)
+    if activity.measurement_time is not None and value_a8("right") is not None:                        #??? right(should be activity.hand)
         if value_a8("right") > 0:
             cai = activity.measurement_time * activity.vector_summ / (480 * value_a8("right"))
             return cai
@@ -374,14 +374,18 @@ def cai(activity: Activity):                                                    
     return None
 
 
-# #
-# #
-# #
-# # def (ca i uc i) 2(hand: str):                   +++                                                        #BJ11-16
-# #
-# # =ЕСЛИ(BA11="";"";(BG11*BI11)^2)
-# #
-# #
+
+
+
+def caiuci2(activity: Activity):                                                                        #BJ11-16
+    if activity.measurement_time is not None:
+        return (activity.uhvi * activity.cai) ** 2
+
+    return None
+
+
+
+#
 # def uti_rh():                                     +++                                                          #BB11 - BB16
 #     =ЕСЛИ(BA11="";
 #     "";
