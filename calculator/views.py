@@ -12,7 +12,9 @@ from .calculations import (
     multiplicity_young, value_a8, num_impact_lt_30, max_vector_summ_impact_lt_30, exceedings_ndn_05h, exceedings_ndn_8h,
     num_values_exceeded, numb_threshold_values_exceeded, exceedings_ndn_05h_women, exceedings_ndn_8h_women,
     num_values_exceeded_pregn_breast, exceedings_ndn_05h_young, exceedings_ndn_8h_young, num_values_exceeded_young,
-    # s, uprobkj, ucj
+    s,
+    uprobkj,
+    ucj
 )
 from .models import Activity, Measurement, Indicator
 
@@ -39,15 +41,15 @@ class CombinedActivityIndicatorView(generic.ListView):
                 activity.partial_exposure = calculate_partial_exposure(activity)
                 activity.vector_summ_time = vector_summ_time(activity)
 
-                # activity.s_axis_x = s(activity, "x")
-                # activity.s_axis_y = s(activity, "y")
-                # activity.s_axis_z = s(activity, "z")
-                # activity.uprobkj_x = uprobkj(activity, "x")
-                # activity.uprobkj_y = uprobkj(activity, "y")
-                # activity.uprobkj_z = uprobkj(activity, "z")
-                # activity.ucj_x = ucj(activity, "x")
-                # activity.ucj_y = ucj(activity, "y")
-                # activity.ucj_z = ucj(activity, "z")
+                activity.s_axis_x = s(activity, "x")
+                activity.s_axis_y = s(activity, "y")
+                activity.s_axis_z = s(activity, "z")
+                activity.uprobkj_x = uprobkj(activity, "x")
+                activity.uprobkj_y = uprobkj(activity, "y")
+                activity.uprobkj_z = uprobkj(activity, "z")
+                activity.ucj_x = ucj(activity, "x")
+                activity.ucj_y = ucj(activity, "y")
+                activity.ucj_z = ucj(activity, "z")
 
 
                 activity.save()
