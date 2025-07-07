@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% load crispy_forms_filters %}
+    <section class="pt-6 pb-4" id="count-stats">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9 z-index-2 border-radius-xl mt-n10 mx-auto p-5 blur shadow-blur">
+          <div class="row">
+            <p>Are You sure You want to delete the measurement: {{ measurement }} ?</p>
+            <p><i class="text-danger">All information about this measurement will be also deleted!</i></p>
+            <form action="" method="post">
+              {% csrf_token %}
+              <input type="submit" value="Yes, delete" class="btn btn-danger">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-auto text-center mx-auto">
+          <a href="{% url 'calculator:activity_list' %}" class="btn btn-primary btn-custom">Back</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

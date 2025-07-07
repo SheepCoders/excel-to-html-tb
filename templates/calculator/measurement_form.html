@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+{% load crispy_forms_filters %}
+
+  <section class="pt-6 pb-4" id="count-stats">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9 z-index-2 border-radius-xl mt-n10 mx-auto p-5 blur shadow-blur">
+          <div class="row">
+            <form action="" method="post" novalidate>
+              {% csrf_token %}
+              {{ form|crispy }}
+              <input class="btn btn-primary" type="submit" value="Submit">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="container">
+    <div class="row">
+      <div>
+        <a href="{% url 'calculator:activity_list' %}" class="btn btn-primary btn-custom">Back</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
