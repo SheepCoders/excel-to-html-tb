@@ -2,7 +2,6 @@ from django.contrib import admin
 from calculator.models import *
 
 
-
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
     list_display = ("vibration_source", "measurement_time", "hand", "round_up_to")
@@ -13,6 +12,7 @@ class ActivityAdmin(admin.ModelAdmin):
 @admin.register(Measurement)
 class MeasurementTypeAdmin(admin.ModelAdmin):
     list_display = ("ax", "ay", "az")
+
 
 @admin.register(Indicator)
 class IndicatorTypeAdmin(admin.ModelAdmin):
