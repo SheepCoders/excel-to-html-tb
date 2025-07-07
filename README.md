@@ -3,7 +3,7 @@
 Python3 must be already installed
 
 ```shell
-git clone https://github.com/neagarr/Excel-to-html-tb.git
+git clone https://github.com/SheepCoders/excel-to-html-tb.git
 cd task_manager
 python3 -m venv venv
 source venv/bin/activate
