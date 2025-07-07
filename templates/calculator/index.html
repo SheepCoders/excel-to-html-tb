@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibration Measurement Table</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .yellow-header {
+            background-color: #ffff8933;
+        }
+        .table-top {
+            background-color: #81d4fa44;
+        }
+        .table-down {
+            background-color: #81d4fa22;
+        }
+        .results {
+            background-color: #F5F5F5;
+        }
+        .results-top {
+            background-color: #D3D3D3;
+        }
+        .green-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .red-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .orange-btn {
+            background-color: #fd7e14;
+            color: white;
+        }
+        .btn-custom {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .measurement-row {
+            border-top: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container mt-4">
+        <h1 class="mb-4 text-center">Vibration Measurement Table</h1>
+
+        <!-- Table -->
+        <table class="table table-bordered">
+            <thead>
+                <tr class="yellow-header">
+                    <th class="text-center">Activity</th>
+                    <th class="text-center">Hand</th>
+                    <th class="text-center">Time [min]</th>
+                    <th colspan="3" class="text-center">Measurements</th>
+                    <th colspan="2"></th>
+                    <th class="text-center">Round up to</th>
+                    <th colspan="4" class="text-center">Effective frequency-weighted vibration acceleration</th>
+                    <th class="text-center">Partial exposure</th>
+                    <th colspan="2"></th>
+
+                </tr>
+                <tr class="yellow-header">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="font-size: 11px;" class="text-center">Ax<br>[m/s²]</th>
+                    <th style="font-size: 11px;" class="text-center">Ay<br>[m/s²]</th>
+                    <th style="font-size: 11px;" class="text-center">Az<br>[m/s²]</th>
+                    <th colspan="2"></th>
+                    <th></th>
+                    <th style="font-size: 11px;" class="text-center">ahwx<br>[m/s²]</th>
+                    <th style="font-size: 11px;" class="text-center">ahwy<br>[m/s²]</th>
+                    <th style="font-size: 11px;" class="text-center">ahwz<br>[m/s²]</th>
+                    <th style="font-size: 11px;" class="text-center">Vector sum</th>
+                    <th></th>
+                    <th  colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for activity in activity_list.reverse %}
+                    <tr class="measurement-row">
+                        <td colspan="16"></td>
+                    </tr>
+
+                    <tr class="measurement-row text-center table-top " style="font-weight: bold;">
+                        <td class="align-middle text-uppercase">
+                            {{ activity.vibration_source }}<br>
+                        </td>
+                        <td>{{ activity.hand|title }}</td>
+                        <td>{{ activity.measurement_time }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ activity.round_up_to }}</td>
+                        <td>{{ activity.rounded_ahwx|default:"-" }}</td>
+                        <td>{{ activity.rounded_ahwy|default:"-" }}</td>
+                        <td>{{ activity.rounded_ahwz|default:"-" }}</td>
+                        <td>{{ activity.rounded_vector_summ|default:"-" }}</td>
+                        <td>{{ activity.partial_exposure|default:"-" }}</td>
+                        <td>
+                            <a href="{% url 'calculator:activity_update' activity.pk %}" class="btn btn-warning btn-custom">Upd.</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'calculator:activity_delete' activity.pk %}" class="btn btn-danger btn-custom">Del.</a>
+                        </td>
+                    </tr>
+
+                    {% for measurement in activity.measurements.all %}
+                        <tr class="measurement-row text-center table-down">
+                            <td colspan="3" class="text-center">measurement</td>
+                            <td>{{ measurement.ax|default:"-" }}</td>
+                            <td>{{ measurement.ay|default:"-" }}</td>
+                            <td>{{ measurement.az|default:"-" }}</td>
+                            <td>
+                                <a href="{% url 'calculator:measurement_update' measurement.pk %}" class="btn btn-warning btn-custom">Upd.</a>
+                            </td>
+                            <td>
+                                <a href="{% url 'calculator:measurement_delete' measurement.pk %}" class="btn btn-danger btn-custom">Del.</a>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+
+                        </tr>
+
+                    {% empty %}
+                        <tr class="measurement-row table-down">
+                            <td colspan="16" class="text-center">No measurements</td>
+                        </tr>
+
+                    {% endfor %}
+                    <tr class="measurement-row table-down">
+                        <td colspan="16" class="text-center">
+                             <a href="{% url 'calculator:measurement_create' %}" class="btn btn-success btn-custom">Add new measurement</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="16" class="text-center">No data</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Buttons -->
+        <div class="mt-4">
+            <a href="{% url 'calculator:activity_create' %}" class="btn btn-primary btn-custom">Add new activity</a>
+            <a href="#" class="btn btn-secondary btn-custom" disabled>Calculate</a>
+        </div>
+
+        <br>
+            <!-- Table -->
+            <table class="table table-bordered">
+                <thead>
+                    <tr class ="results-top">
+                        <th class="text-center">Indicators</th>
+                        <th class="text-center">Left Hand</th>
+                        <th class="text-center">Right Hand</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for indicator in indicator_list %}
+                        <tr class="measurement-row results " style="font-weight: bold;">
+                            <td>
+                                Dzienna ekspozycja na drgania A (8) ±U* [m/s2]
+                                Wartość dopuszczalna NDN = 2.8 m/s2
+                            </td>
+                            <td>{{ indicator.daily_exposure_lh|default:"-" }}</td>
+                            <td>{{ indicator.daily_exposure_rh|default:"-" }}</td>
+                        </tr>
+                        <tr class="measurement-row results " style="font-weight: bold;">
+                            <td>
+                                Ekspozycja trwająca 30 min i krócej ahv max ±U* [m/s2]
+                                Wartość dopuszczalna NDN = 11,2 m/s2
+                            </td>
+                            <td>{{ indicator.exposure_30_less_lh|default:"-" }}</td>
+                            <td>{{ indicator.exposure_30_less_rh|default:"-" }}</td>
+                        </tr>
+                        <tr class="measurement-row results " style="font-weight: bold;">
+                            <td>
+                                Krotność wartości dopuszczalnych (NDN) wg  Dz.U. z 2018 r., poz. 1286
+                            </td>
+                            <td>{{ indicator.multiplicity_NDN_lh|default:"-" }}</td>
+                            <td>{{ indicator.multiplicity_NDN_rh|default:"-" }}</td>
+                        </tr>
+                        <tr class="measurement-row results " style="font-weight: bold;">
+                            <td>
+                                Krotność  progu działania wg Dz.U. z 2005 r. nr 157, poz. 1318
+                                Wartość progu działania wynosi 2,5 m/s2
+                            </td>
+                            <td>{{ indicator.action_threshold_multiplicity_lh|default:"-" }}</td>
+                            <td>{{ indicator.action_threshold_multiplicity_rh|default:"-" }}</td>
+                        </tr>
+                        <tr class="measurement-row results " style="font-weight: bold;">
+                            <td>
+                                Krotność  wartości dopuszczalnych wg Dz.U. z 2017 r., poz. 796
+                                (kobiety w ciąży i karmiące piersią)
+                            </td>
+                            <td>{{ indicator.multiplicity_pregnant_breastfeeding_lh|default:"-" }}</td>
+                            <td>{{ indicator.multiplicity_pregnant_breastfeeding_rh|default:"-" }}</td>
+                        </tr>
+                        <tr class="measurement-row results " style="font-weight: bold;">
+                            <td>
+                                Krotność wartości dopuszczalnych wg Dz.U. z 2023 , poz. 1240 (młodociani)
+                            </td>
+                            <td>{{ indicator.multiplicity_young_lh|default:"-" }}</td>
+                            <td>{{ indicator.multiplicity_young_rh|default:"-" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+    </div>
+
+</body>
+</html>
