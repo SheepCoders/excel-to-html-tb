@@ -89,9 +89,6 @@ class CombinedActivityIndicatorView(generic.ListView):
                 activity.cti = cti(activity)
                 activity.ctiuti2 = ctiuti2(activity)
                 activity.caiuci2 = caiuci2(activity)
-                activity.uca8 = uca8(activity)
-                activity._2xuca8 = _2xuca8(activity)
-                activity.daily_exposure = daily_exposure(activity)
                 activity.uahv = uahv(activity)
 
                 activity.save()
@@ -112,9 +109,7 @@ class CombinedActivityIndicatorView(generic.ListView):
                     multiplicity_pregnant_breastfeeding("right")
                 )
                 indicator.multiplicity_young_rh = multiplicity_young("right")
-                indicator.daily_exposure_rh = daily_exposure(
-                    Activity.objects.filter(hand="right")[0]
-                )
+                indicator.daily_exposure_rh = daily_exposure("right")
                 # for debug
                 indicator.bg20_r = value_a8("right")
                 indicator.ba17_r = hand_exposure_time("right")
@@ -133,6 +128,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.bs18_r = exceedings_ndn_05h_young("right")
                 indicator.bs17_r = exceedings_ndn_8h_young("right")
                 indicator.bs15_r = num_values_exceeded_young("right")
+                indicator.uca_8_r = uca8("right")
+                indicator._2xuca8_r = _2xuca8("right")
                 indicator.h22_r = multiplicity_young("right")
                 indicator.ucahvmax_r = ucahvmax("right")
                 indicator.exposure_30_less_rh = exposure_30_less("right")
@@ -165,6 +162,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.h22_r = None
                 indicator.ucahvmax_r = None
                 indicator.exposure_30_less_rh = None
+                indicator.uca_8_r = None
+                indicator._2xuca8_r = None
 
             if Activity.objects.filter(
                 hand="left", measurements__isnull=False
@@ -178,9 +177,7 @@ class CombinedActivityIndicatorView(generic.ListView):
                     multiplicity_pregnant_breastfeeding("left")
                 )
                 indicator.multiplicity_young_lh = multiplicity_young("left")
-                indicator.daily_exposure_lh = daily_exposure(
-                    Activity.objects.filter(hand="left")[0]
-                )
+                indicator.daily_exposure_lh = daily_exposure("left")
                 # for debug
                 indicator.bg20_l = value_a8("left")
                 indicator.ba17_l = hand_exposure_time("left")
@@ -200,6 +197,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.bs17_l = exceedings_ndn_8h_young("left")
                 indicator.bs15_l = num_values_exceeded_young("left")
                 indicator.h22_l = multiplicity_young("left")
+                indicator.uca_8_l = uca8("left")
+                indicator._2xuca8_l = _2xuca8("left")
                 indicator.ucahvmax_l = ucahvmax("left")
                 indicator.exposure_30_less_lh = exposure_30_less("left")
 
@@ -231,6 +230,8 @@ class CombinedActivityIndicatorView(generic.ListView):
                 indicator.h22_l = None
                 indicator.ucahvmax_l = None
                 indicator.exposure_30_less_lh = None
+                indicator.uca_8_l = None
+                indicator._2xuca8_l = None
 
             indicator.save()
 
