@@ -91,7 +91,38 @@ class CombinedActivityIndicatorView(generic.ListView):
                 activity.caiuci2 = caiuci2(activity)
                 activity.uahv = uahv(activity)
 
-                activity.save()
+            else:
+                activity.ahwx = None
+                activity.ahwy = None
+                activity.ahwz = None
+                activity.vector_summ = None
+                activity.rounded_ahwx = None
+                activity.rounded_ahwy = None
+                activity.rounded_ahwz = None
+                activity.rounded_vector_summ = None
+                activity.partial_exposure = None
+                activity.vector_summ_time = None
+                # for debug
+                activity.s_axis_x = None
+                activity.s_axis_y = None
+                activity.s_axis_z = None
+                activity.uprobkj_x = None
+                activity.uprobkj_y = None
+                activity.uprobkj_z = None
+                activity.ucj_x = None
+                activity.ucj_y = None
+                activity.ucj_z = None
+                activity.uhvi = None
+                activity.cai = None
+                activity.caiuci2 = None
+                activity.uti_rh = None
+                activity.uti_lh = None
+                activity.cti = None
+                activity.ctiuti2 = None
+                activity.caiuci2 = None
+                activity.uahv = None
+
+            activity.save()
 
         if Indicator.objects.count() == 0:
             indicator = Indicator.objects.create()
