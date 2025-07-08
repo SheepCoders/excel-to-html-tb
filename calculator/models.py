@@ -54,9 +54,6 @@ class Activity(models.Model):  # Czynność
     cti = models.FloatField(blank=True, null=True)
     ctiuti2 = models.FloatField(blank=True, null=True)
     caiuci2 = models.FloatField(blank=True, null=True)
-    uca8 = models.FloatField(blank=True, null=True)
-    _2xuca8 = models.FloatField(blank=True, null=True)
-    daily_exposure = models.TextField(blank=True, null=True)
     uahv = models.FloatField(blank=True, null=True)
 
     class Meta:
@@ -446,4 +443,28 @@ class Indicator(models.Model):
         validators=[
             MinValueValidator(0),
         ],
+    )
+
+    uca_8_l = models.FloatField(
+        blank=True,
+        null=True,
+        validators=[
+            MinValueValidator(0),
+        ],
+    )
+
+    uca_8_r = models.FloatField(
+        blank=True,
+        null=True,
+        validators=[
+            MinValueValidator(0),
+        ],
+    )
+    _2xuca8_l = models.FloatField(
+        blank=True,
+        null=True,
+    )
+    _2xuca8_r = models.FloatField(
+        blank=True,
+        null=True,
     )

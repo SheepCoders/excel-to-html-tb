@@ -478,17 +478,18 @@ def cti(activity: Activity):  # BK11 -BK16   BK36 - BK41
 def ctiuti2(activity: Activity):  # BL11 -BL16
     if activity.measurement_time is not None:
         if activity.hand.lower() == "right":
-            return (activity.uti_lh * activity.cti) ** 2
+            if activity.uti_lh and activity.cti:
+                return (activity.uti_lh * activity.cti) ** 2
 
     return None
 
 
-def uca8(activity: Activity):  # BG21
-    if activity.measurement_time is not None:
+def uca8(hand: str):  # BG21
+    if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
         sum_of_caiuci2 = 0
         sum_of_ctiuti2 = 0
 
-        for activity in Activity.objects.filter(hand=activity.hand):
+        for activity in Activity.objects.filter(hand=hand):
             if activity.caiuci2 is not None:
                 sum_of_caiuci2 += activity.caiuci2
             if activity.ctiuti2 is not None:
@@ -498,25 +499,24 @@ def uca8(activity: Activity):  # BG21
     return None
 
 
-def _2xuca8(activity: Activity):  # BG22
-    if activity.measurement_time is not None:
-        return 2 * activity.uca8
+def _2xuca8(hand: str):  # BG22
+    if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
+        if uca8(hand=hand) is not None:
+            return 2 * uca8(hand=hand)
     return None
 
 
-def daily_exposure(activity: Activity):  # H17 H42
-    if activity.measurement_time is not None:
-        result_str = ""
+def daily_exposure(hand: str):  # H17 H42
+    if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
 
         if (
-            hand_exposure_time(hand=activity.hand) is not None
-            and hand_exposure_time(hand=activity.hand) > 30
+            hand_exposure_time(hand=hand) is not None
+            and hand_exposure_time(hand=hand) > 30
         ):
-            if value_a8(activity.hand) is not None and activity._2xuca8 is not None:
-                first_value = round(value_a8(hand=activity.hand), RES_ROUND_UP_TO)
-                second_value = round(activity._2xuca8, RES_ROUND_UP_TO)
-                result_str += f"{first_value} ± {second_value}"
-                return result_str
+            if value_a8(hand) is not None and _2xuca8(hand=hand) is not None:
+                first_value = round(value_a8(hand=hand), RES_ROUND_UP_TO)
+                second_value = round(_2xuca8(hand=hand), RES_ROUND_UP_TO)
+                return f"{first_value} ± {second_value}"
 
         return f"Nie dotyczy"
     return None
