@@ -13,7 +13,7 @@ crispy-bootstrap4==2024.10
 crispy-forms-bootstrap2==2024.1
 cryptography==41.0.4
 distlib==0.3.7
-Django==5.1.4
+Django==5.2.2
 django-crispy-forms==2.3
 django-debug-toolbar==4.4.6
 django-mixins==0.0.10

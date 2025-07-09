@@ -1,3 +1,4 @@
+from django.db.models.aggregates import Sum
 from calculator.models import Activity
 
 
@@ -95,17 +96,11 @@ def calculate_partial_exposure(activity: Activity):
     return None
 
 
-def hand_exposure_time(hand: str):  # BA17
-    hand_exposure = 0
-
-    if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
-        for activity in Activity.objects.all():
-            if activity.hand == hand:
-                if activity.measurement_time is not None:
-                    hand_exposure += activity.measurement_time
-
-        return hand_exposure
-    return None
+def hand_exposure_time(hand: str):
+    total = Activity.objects.filter(hand=hand, measurements__isnull=False).distinct().aggregate(
+        total_time=Sum("measurement_time")
+    )["total_time"]
+    return total if total is not None else None
 
 
 def num_impact_lt_30(hand: str):  # BM9
@@ -157,6 +152,7 @@ def value_a8(hand: str):  # BG20
     value = None
 
     if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
+        print("__________________________________________________")
         if hand_exposure_time(hand) > 0:
             all_vector_summ_time = 0
             for activity in Activity.objects.filter(hand=hand):
