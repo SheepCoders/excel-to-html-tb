@@ -1,12 +1,12 @@
 ## Installing / Getting started
 
-Python3 must be already installed
+Python3 and Git must be already installed
 
 ```shell
 git clone https://github.com/SheepCoders/excel-to-html-tb.git
 cd excel-to-html-tb
 python3 -m venv venv
-source venv/bin/activate
+for linux : "source venv/bin/activate"; for windows "venv\Scripts\activate"
 pip install -r requirements.txt
 python manage.py runserver
 ```
