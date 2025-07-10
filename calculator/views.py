@@ -293,12 +293,14 @@ class CombinedActivityIndicatorView(generic.ListView):
 
         if Activity.objects.filter(measurements__isnull=False, hand="right").exists():
             self.calculate_indicator_right_hand(indicator=indicator, hand="right")
-        elif Activity.objects.filter(measurements__isnull=True, hand="right").exists():
+        elif (Activity.objects.filter(measurements__isnull=True, hand="right").exists()
+              or not Activity.objects.filter(hand="right").exists()):
             self.reset_indicator_right_hand(indicator=indicator)
 
         if Activity.objects.filter(measurements__isnull=False, hand="left").exists():
             self.calculate_indicator_left_hand(indicator=indicator, hand="left")
-        elif Activity.objects.filter(measurements__isnull=True, hand="left").exists():
+        elif (Activity.objects.filter(measurements__isnull=True, hand="left").exists()
+              or not Activity.objects.filter(hand="left").exists()):
             self.reset_indicator_left_hand(indicator=indicator)
 
         return context
