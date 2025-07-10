@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibration Measurement Table</title>
+    <title>Arkusz Drgań Miejscowych</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
@@ -31,7 +31,7 @@
             color: white;
         }
         .orange-btn {
-            background-color: #fd7e14;
+            background-color: rgba(236, 146, 80, 0.93);
             color: white;
         }
         .btn-custom {
@@ -47,38 +47,34 @@
 </head>
 <body class="bg-light">
     <div class="container mt-4">
-        <h1 class="mb-4 text-center">Vibration Measurement Table</h1>
+        <h1 class="mb-4 text-center">Arkusz Drgań Miejscowych</h1>
 
         <!-- Table -->
         <table class="table table-bordered">
             <thead>
                 <tr class="yellow-header">
-                    <th class="text-center">Activity</th>
-                    <th class="text-center">Hand</th>
-                    <th class="text-center">Time [min]</th>
-                    <th colspan="3" class="text-center">Measurements</th>
-                    <th colspan="2"></th>
-                    <th class="text-center">Round up to</th>
-                    <th colspan="4" class="text-center">Effective frequency-weighted vibration acceleration</th>
-                    <th class="text-center">Partial exposure</th>
-                    <th colspan="2"></th>
+                    <th class="text-center" rowspan="3">Wykonywana czynność / źródło drgań / warunki pomiarów</th>
+                    <th class="text-center" rowspan="3">Miejsce, orientacja osi oraz metoda mocowania przetwornika</th>
+                    <th class="text-center" rowspan="3">Czas ekspozycji Ti [min]:</th>
+                    <th colspan="3" class="text-center">Odczyty jednostkowe</th>
+                    <th class="text-center" rowspan="3">Ilości miejsc po przecinku</th>
+                    <th colspan="4" class="text-center">Skuteczne ważone częstotliwościowo przyspieszenie drgań</th>
+                    <th class="text-center" rowspan="3">Cząstkowa ekspozycja  Ai (8) [m/s2]</th>
+                    <th colspan="2" rowspan="3"></th>
 
                 </tr>
                 <tr class="yellow-header">
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th style="font-size: 14px;" class="text-center" colspan="3">Składowe kierunkowe<br>[m/s²]</th>
+                    <th style="font-size: 14px;" class="text-center" colspan="3">Składowe kierunkowe<br>[m/s²]</th>
+                    <th style="font-size: 11px;" class="text-center" rowspan="2">Suma wektorowa ahv [m/s2]</th>
+                </tr>
+                <tr class="yellow-header">
                     <th style="font-size: 11px;" class="text-center">Ax<br>[m/s²]</th>
                     <th style="font-size: 11px;" class="text-center">Ay<br>[m/s²]</th>
                     <th style="font-size: 11px;" class="text-center">Az<br>[m/s²]</th>
-                    <th colspan="2"></th>
-                    <th></th>
                     <th style="font-size: 11px;" class="text-center">ahwx<br>[m/s²]</th>
                     <th style="font-size: 11px;" class="text-center">ahwy<br>[m/s²]</th>
                     <th style="font-size: 11px;" class="text-center">ahwz<br>[m/s²]</th>
-                    <th style="font-size: 11px;" class="text-center">Vector sum</th>
-                    <th></th>
-                    <th  colspan="2"></th>
                 </tr>
             </thead>
             <tbody>
@@ -87,68 +83,64 @@
                         <td colspan="16"></td>
                     </tr>
 
-                    <tr class="measurement-row text-center table-top " style="font-weight: bold;">
-                        <td class="align-middle text-uppercase">
-                            {{ activity.vibration_source }}<br>
+                    <tr class="measurement-row table-top" style="font-weight: bold;">
+                        <td class="fa-align-right" rowspan="{{ activity.measurement_count }}" style="font-size: 14px;">
+                            Nazwa: {{ activity.act_name }}<br>
+                            Czas trwania pomiaru: {{ activity.time_Tp }} min.<br>
+                            {{ activity.description_source_measuring }}<br>
                         </td>
-                        <td>{{ activity.hand|title }}</td>
-                        <td>{{ activity.measurement_time }}</td>
+                        <td rowspan="{{ activity.measurement_count }}" class="align-middle text-center">
+                            {{ activity.hand|title }}
+                        </td>
+                        <td rowspan="{{ activity.measurement_count }}" class="align-middle text-center">
+                            {{ activity.measurement_time_Ti }}
+                        </td>
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>{{ activity.round_up_to }}</td>
-                        <td>{{ activity.rounded_ahwx|default:"-" }}</td>
-                        <td>{{ activity.rounded_ahwy|default:"-" }}</td>
-                        <td>{{ activity.rounded_ahwz|default:"-" }}</td>
-                        <td>{{ activity.rounded_vector_summ|default:"-" }}</td>
-                        <td>{{ activity.partial_exposure|default:"-" }}</td>
+                        <td class="align-middle text-center">{{ activity.round_up_to }}</td>
+                        <td class="align-middle text-center">{{ activity.rounded_ahwx|default:"-" }}</td>
+                        <td class="align-middle text-center">{{ activity.rounded_ahwy|default:"-" }}</td>
+                        <td class="align-middle text-center">{{ activity.rounded_ahwz|default:"-" }}</td>
+                        <td class="align-middle text-center">{{ activity.rounded_vector_summ|default:"-" }}</td>
+                        <td class="align-middle text-center">{{ activity.partial_exposure|default:"-" }}</td>
                         <td>
-                            <a href="{% url 'calculator:activity_update' activity.pk %}" class="btn btn-warning btn-custom">Upd.</a>
+                            <a href="{% url 'calculator:activity_update' activity.pk %}" class="btn btn-warning btn-custom">Akt.</a>
                         </td>
                         <td>
-                            <a href="{% url 'calculator:activity_delete' activity.pk %}" class="btn btn-danger btn-custom">Del.</a>
+                            <a href="{% url 'calculator:activity_delete' activity.pk %}" class="btn btn-danger btn-custom">Usun</a>
                         </td>
                     </tr>
 
                     {% for measurement in activity.measurements.all %}
                         <tr class="measurement-row text-center table-down">
-                            <td colspan="3" class="text-center">measurement</td>
                             <td>{{ measurement.ax|default:"-" }}</td>
                             <td>{{ measurement.ay|default:"-" }}</td>
                             <td>{{ measurement.az|default:"-" }}</td>
+                            <td colspan="6"></td>
                             <td>
-                                <a href="{% url 'calculator:measurement_update' measurement.pk %}" class="btn btn-warning btn-custom">Upd.</a>
+                                <a href="{% url 'calculator:measurement_update' measurement.pk %}" class="btn btn-warning btn-custom" style="font-size: 12px;">Akt.</a>
                             </td>
                             <td>
-                                <a href="{% url 'calculator:measurement_delete' measurement.pk %}" class="btn btn-danger btn-custom">Del.</a>
+                                <a href="{% url 'calculator:measurement_delete' measurement.pk %}" class="btn btn-danger btn-custom" style="font-size: 12px;">Usun</a>
                             </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
 
                         </tr>
 
                     {% empty %}
                         <tr class="measurement-row table-down">
-                            <td colspan="16" class="text-center">No measurements</td>
+                            <td colspan="16" class="text-center">Brak odczytów</td>
                         </tr>
 
                     {% endfor %}
-                    <tr class="measurement-row table-down">
+                    <tr class="measurement-row table-top">
                         <td colspan="16" class="text-center">
-                             <a href="{% url 'calculator:measurement_create' %}" class="btn btn-success btn-custom">Add new measurement</a>
+                             <a href="{% url 'calculator:measurement_create' %}" class="btn btn-success btn-custom">Dodaj kolejny odczyt</a>
                         </td>
                     </tr>
                 {% empty %}
                     <tr>
-                        <td colspan="16" class="text-center">No data</td>
+                        <td colspan="16" class="text-center">Brak danych</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -156,8 +148,7 @@
 
         <!-- Buttons -->
         <div class="mt-4">
-            <a href="{% url 'calculator:activity_create' %}" class="btn btn-primary btn-custom">Add new activity</a>
-            <a href="#" class="btn btn-secondary btn-custom" disabled>Calculate</a>
+            <a href="{% url 'calculator:activity_create' %}" class="btn btn-primary btn-custom">Dodaj kolejną czynność</a>
         </div>
 
         <br>
@@ -165,9 +156,9 @@
             <table class="table table-bordered">
                 <thead>
                     <tr class ="results-top">
-                        <th class="text-center">Indicators</th>
-                        <th class="text-center">Left Hand</th>
-                        <th class="text-center">Right Hand</th>
+                        <th class="text-center">Wyniki</th>
+                        <th class="text-center">Lewa ręka</th>
+                        <th class="text-center">Prawa ręka</th>
 
                     </tr>
                 </thead>
@@ -218,6 +209,26 @@
                             </td>
                             <td>{{ indicator.multiplicity_young_lh|default:"-" }}</td>
                             <td>{{ indicator.multiplicity_young_rh|default:"-" }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                *U - złożona niepewność  rozszerzona przy poziomie ufności 95% i współczynniku rozszerzenia k=2
+                                Dzienna ekspozycja na drgania A (8) – wyrażona w postaci równoważnej energetycznie dla 8
+                                godzin działania sumy wektorowej skutecznych, ważonych częstotliwościowo przyspieszeń drgań,
+                                wyznaczonych dla trzech składowych kierunkowych (ahwx, ahwy, ahwz).
+                                Ekspozycja trwająca 30 min i krócej ahv max – wyrażona w postaci największej sumy wektorowej
+                                skutecznych, ważonych częstotliwościowo przyspieszeń drgań wyznaczonych dla trzech składowych
+                                kierunkowych  (ahwx, ahwy, ahwz) wyznaczonej spośród sum wektorowych dla poszczególnych czynności
+                                trwających nie dłużej niż 30 minut.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                Uwagi:<br>
+                                {% for activity in activity_list %}
+                                    {{ activity.act_name  }} : {{ activity.comments }} <br>
+                                {% endfor %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

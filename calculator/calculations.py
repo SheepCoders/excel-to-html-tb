@@ -78,14 +78,14 @@ def calculate_vector_summ(activity: Activity):
 
 def vector_summ_time(activity: Activity):  # BH11-BH16
 
-    return (activity.vector_summ**2) * activity.measurement_time if activity.vector_summ else None
+    return (activity.vector_summ**2) * activity.measurement_time_Ti if activity.vector_summ else None
 
 
 
 def calculate_partial_exposure(activity: Activity):
     if activity.vector_summ:
         partial_exposure = (
-            (activity.measurement_time / 480) ** 0.5
+                                   (activity.measurement_time_Ti / 480) ** 0.5
         ) * activity.vector_summ
         return round(partial_exposure, activity.round_up_to)
 
@@ -94,14 +94,14 @@ def calculate_partial_exposure(activity: Activity):
 
 def hand_exposure_time(hand: str):
     total = Activity.objects.filter(hand=hand, measurements__isnull=False).distinct().aggregate(
-        total_time=Sum("measurement_time")
+        total_time=Sum("measurement_time_Ti")
     )["total_time"]
 
     return total if total else None
 
 
 def num_impact_lt_30(hand: str):  # BM9
-    num = Activity.objects.filter(measurement_time__lt=30, hand=hand).distinct().count()
+    num = Activity.objects.filter(measurement_time_Ti__lt=30, hand=hand).distinct().count()
 
     return num
 
@@ -112,7 +112,7 @@ def num_impact_lt_30(hand: str):  # BM9
 #             vector_sums = [
 #                 activity.vector_summ
 #                 for activity in Activity.objects.filter(
-#                     measurement_time__lt=30, hand=hand
+#                     measurement_time_Ti__lt=30, hand=hand
 #                 ).distinct()
 #                 if activity.vector_summ is not None
 #             ]
@@ -120,7 +120,7 @@ def num_impact_lt_30(hand: str):  # BM9
 #             return round(max_vector_summ, 5)
 #
 #         elif num_impact_lt_30(hand) == 1:
-#             activity = Activity.objects.get(hand=hand, measurement_time__lt=30).distinct()
+#             activity = Activity.objects.get(hand=hand, measurement_time_Ti__lt=30).distinct()
 #             if activity.vector_summ is not None:
 #                 max_vector_summ = activity.vector_summ
 #                 return round(max_vector_summ, 5)
@@ -136,7 +136,7 @@ def max_vector_summ_impact_lt_30(hand: str) -> float | None:
     if num_impact_lt_30(hand) < 1:
         return None
 
-    activities = Activity.objects.filter(measurement_time__lt=30, hand=hand).distinct()
+    activities = Activity.objects.filter(measurement_time_Ti__lt=30, hand=hand).distinct()
     vector_sums = [a.vector_summ for a in activities if a.vector_summ]
     result = max(vector_sums) if vector_sums else None
 
@@ -301,7 +301,7 @@ def multiplicity_young(hand: str):  # H22
 
 
 def s(activity: Activity, axis: str):  # O20
-    if activity.measurements.count() > 1 and activity.measurement_time:
+    if activity.measurements.count() > 1 and activity.measurement_time_Ti:
         ahw_axis = calculate_ahw(activity=activity, axis=axis)
         sum_of_square_stdev = 0
 
@@ -322,7 +322,7 @@ def s(activity: Activity, axis: str):  # O20
 
 
 def uprobkj(activity: Activity, axis: str):  # O21
-    if activity.measurement_time:
+    if activity.measurement_time_Ti:
 
         if activity.measurements.count() > 1:
             if axis.lower() == "x":
@@ -347,7 +347,7 @@ def uprobkj(activity: Activity, axis: str):  # O21
 
 def ucj(activity: Activity, axis: str):  # O22
 
-     if activity.measurement_time:
+     if activity.measurement_time_Ti:
         if axis.lower() == "x":
             ucj = (
                 activity.uprobkj_x**2 + (COMBINED_STANDARD_UNCERTAINTY / 100) ** 2
@@ -392,10 +392,10 @@ def uhvi(activity: Activity):  # BG11 = #R22
 
 
 def cai(activity: Activity):  # BI11
-    if activity.measurement_time and value_a8("right") and activity.vector_summ:  # ??? right(should be activity.hand)
+    if activity.measurement_time_Ti and value_a8("right") and activity.vector_summ:  # ??? right(should be activity.hand)
         if value_a8("right") > 0:
             cai = (
-                activity.measurement_time
+                activity.measurement_time_Ti
                 * activity.vector_summ
                 / (480 * value_a8("right"))
             )
@@ -405,7 +405,7 @@ def cai(activity: Activity):  # BI11
 
 
 def caiuci2(activity: Activity):  # BJ11-16
-    if activity.measurement_time:
+    if activity.measurement_time_Ti:
         if activity.uhvi and activity.cai:
             return (activity.uhvi * activity.cai) ** 2
 
@@ -414,7 +414,7 @@ def caiuci2(activity: Activity):  # BJ11-16
 
 def uti_rh(activity: Activity):  # BB11 - BB16
     if Activity.objects.filter(hand="right"):
-        if activity.measurement_time:
+        if activity.measurement_time_Ti:
             return 0
             ## Q1 -Q3 how works?
     return None
@@ -422,14 +422,14 @@ def uti_rh(activity: Activity):  # BB11 - BB16
 
 def uti_lh(activity: Activity):  # BB11 - BB16
     if Activity.objects.filter(hand="left"):
-        if activity.measurement_time:
+        if activity.measurement_time_Ti:
             return 0
             ## Q1 -Q3 how works?
     return None
 
 
 def cti(activity: Activity):  # BK11 -BK16   BK36 - BK41
-    if activity.measurement_time and value_a8("right") and activity.vector_summ:
+    if activity.measurement_time_Ti and value_a8("right") and activity.vector_summ:
         if value_a8("right") > 0:
             return activity.vector_summ**2 / (
                 2 * 480 * value_a8("right")
@@ -439,7 +439,7 @@ def cti(activity: Activity):  # BK11 -BK16   BK36 - BK41
 
 
 def ctiuti2(activity: Activity):  # BL11 -BL16
-    if activity.measurement_time:
+    if activity.measurement_time_Ti:
         if activity.hand.lower() == "right":
             if activity.uti_lh and activity.cti:
                 return (activity.uti_lh * activity.cti) ** 2
@@ -495,7 +495,7 @@ def daily_exposure(hand: str):  # H17 H42
 
 
 def uahv(activity: Activity):  # BN11 - BN16
-    time = activity.measurement_time
+    time = activity.measurement_time_Ti
 
     if time and time <= 30:
         return activity.uhvi
@@ -510,7 +510,7 @@ def ucahvmax(hand: str):  # BG18
             # uahv_sums = [
             #     activity.uahv
             #     for activity in Activity.objects.filter(
-            #         measurement_time__lt=30, hand=hand
+            #         measurement_time_Ti__lt=30, hand=hand
             #     ).distinct()
             #     if activity.uahv is not None
             # ]
@@ -518,12 +518,12 @@ def ucahvmax(hand: str):  # BG18
             # return round(max_uahv, 5) if max_uahv else None
 
             max_uahv = Activity.objects.filter(
-                measurement_time__lt=30, hand=hand
+                measurement_time_Ti__lt=30, hand=hand
             ).aggregate(max_uahv=Max("uahv"))["max_uahv"]
             return round(max_uahv, 5) if max_uahv else None
 
         elif num_impact_lt_30(hand) == 1:
-            activity = Activity.objects.filter(hand=hand, measurement_time__lt=30).first()
+            activity = Activity.objects.filter(hand=hand, measurement_time_Ti__lt=30).first()
             max_uahv = activity.uahv if activity.uahv else None
             return round(max_uahv, 5) if max_uahv else None
 
@@ -538,7 +538,7 @@ def ucahvmax(hand: str):  # BG18
 
 def exposure_30_less(hand: str):  # H18
     if Activity.objects.filter(measurements__isnull=False, hand=hand).exists():
-        if Activity.objects.filter(measurement_time__lt=30, hand=hand).exists():
+        if Activity.objects.filter(measurement_time_Ti__lt=30, hand=hand).exists():
             if max_vector_summ_impact_lt_30(hand=hand) and ucahvmax(hand=hand):
                 return f"{round(max_vector_summ_impact_lt_30(hand=hand), 2)} ± {round(ucahvmax(hand=hand) * 2, 2)}"
 

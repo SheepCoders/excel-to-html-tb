@@ -1,3 +1,4 @@
+from django.db.models.aggregates import Count
 from django.urls import reverse_lazy
 from django.views import generic
 from .calculations import (
@@ -47,7 +48,6 @@ class CombinedActivityIndicatorView(generic.ListView):
     model = Activity
     context_object_name = "activity_list"
     template_name = "calculator/index.html"
-    queryset = Activity.objects.prefetch_related("measurements").all()
     # paginate_by = 5
 
     @staticmethod
@@ -303,17 +303,22 @@ class CombinedActivityIndicatorView(generic.ListView):
 
         return context
 
+    def get_queryset(self):
+        return Activity.objects.prefetch_related("measurements").annotate(
+            measurement_count=Count("measurements") + 1
+        ).all()
+
 
 class ActivityCreateView(generic.CreateView):
     model = Activity
-    fields = ("vibration_source", "measurement_time", "hand", "round_up_to")
+    fields = ("description_source_measuring", "hand", "act_name", "time_Tp", "measurement_time_Ti", "b_type_value","comments", "round_up_to")
     success_url = reverse_lazy("calculator:activity_list")
     template_name = "calculator/activity_form.html"
 
 
 class ActivityUpdateView(generic.UpdateView):
     model = Activity
-    fields = ("vibration_source", "measurement_time", "hand", "round_up_to")
+    fields = ("description_source_measuring", "hand", "act_name", "time_Tp", "measurement_time_Ti", "b_type_value", "comments", "round_up_to")
     success_url = reverse_lazy("calculator:activity_list")
     template_name = "calculator/activity_form.html"
 

@@ -8,23 +8,56 @@ class Activity(models.Model):  # Czynność
         ("right", "Prawa ręka"),
     ]
 
-    vibration_source = models.CharField(max_length=100, blank=True)
-    hand = models.CharField(
-        max_length=50, choices=HAND_CHOICES, blank=False, null=False
+    description_source_measuring = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name = "1. Wykonywana czynność / źródło drgań / warunki pomiarów:",
     )
-    measurement_time = models.IntegerField(
+    hand = models.CharField(
+        max_length=50,
+        choices=HAND_CHOICES,
+        blank=False,
+        null=False,
+        verbose_name="2. Miejsce, orientacja osi oraz metoda mocowania przetwornika:"
+    )
+    act_name = models.CharField(
+        max_length=100,
+        blank=False,
+        null=True,
+        verbose_name="3. Nazwa czynności:"
+    )
+    time_Tp = models.IntegerField(
+        blank=False,
+        null=True,
+        validators=[MinValueValidator(1),],
+        default=1,
+        verbose_name="4. Czas trwania pomiaru Tp [min]:"
+    )
+    measurement_time_Ti = models.IntegerField(
         blank=False,
         null=False,
         validators=[
             MinValueValidator(1),
         ],
         default=1,
+        verbose_name="5. Czas ekspozycji Ti [min]:"
+    )
+    b_type_value = models.FloatField(
+        blank=True,
+        null=True,
+        verbose_name="6. Wartość niepewności typu B:"
+    )
+    comments = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="7. Uwagi:"
     )
     round_up_to = models.IntegerField(
         blank=False,
         null=False,
         default=1,
         validators=[MinValueValidator(1), MaxValueValidator(10)],
+        verbose_name="8. Ilośc miejsc po przecinku:"
     )
     rounded_ahwx = models.FloatField(blank=True, null=True)
     rounded_ahwy = models.FloatField(blank=True, null=True)
@@ -61,16 +94,19 @@ class Activity(models.Model):  # Czynność
         verbose_name = "activities"
         ordering = (
             "-hand",
-            "measurement_time",
+            "measurement_time_Ti",
         )
 
     def __str__(self):
-        return f"{self.vibration_source}, {self.hand}/ {self.measurement_time} min."
+        return f"{self.description_source_measuring}, {self.hand}/ {self.measurement_time_Ti} min."
 
 
 class Measurement(models.Model):
     activity = models.ForeignKey(
-        Activity, on_delete=models.CASCADE, related_name="measurements"
+        Activity,
+        on_delete=models.CASCADE,
+        related_name="measurements",
+        verbose_name="1. Wybierz czynnośc:",
     )
     ax = models.FloatField(
         blank=False,
@@ -98,7 +134,7 @@ class Measurement(models.Model):
         verbose_name_plural = "measurements"
 
     def __str__(self):
-        return f"{self.activity.measurement_time}: {self.ax} {self.ay} {self.az}"
+        return f"{self.activity.measurement_time_Ti}: {self.ax} {self.ay} {self.az}"
 
 
 class Indicator(models.Model):
