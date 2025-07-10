@@ -4,9 +4,9 @@ from calculator.models import *
 
 @admin.register(Activity)
 class ActivityAdmin(admin.ModelAdmin):
-    list_display = ("vibration_source", "measurement_time", "hand", "round_up_to")
-    list_filter = ("vibration_source", "measurement_time", "hand")
-    search_fields = ("vibration_source",)
+    list_display = ("description_source_measuring", "hand", "measurement_time_Ti", "act_name", "round_up_to")
+    list_filter = ("description_source_measuring", "measurement_time_Ti", "hand")
+    search_fields = ("description_source_measuring", "act_name",)
 
 
 @admin.register(Measurement)
